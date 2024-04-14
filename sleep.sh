@@ -5,12 +5,12 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-echo "\$1: $1"
+# echo "\$1: $1"
 
 i="$1"
 while [ "${i}" -gt 0 ]; do
-  echo -n "$i "
+#  echo -n "$i "
   sleep 1
   i=$(( i-1 ))
 done
-echo "done"
+#echo "done"
