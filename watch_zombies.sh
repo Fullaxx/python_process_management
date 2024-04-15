@@ -1,3 +1,3 @@
 #!/bin/bash
 
-watch -d -n1 'ps aux | grep "<defunct>" | wc -l'
+watch -d -n 0.2 'ps aux | grep "<defunct>" | wc -l'
