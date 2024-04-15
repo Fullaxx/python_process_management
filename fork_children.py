@@ -14,7 +14,10 @@ import subprocess
 
 g_shutdown = False
 
-def signal_handler(sig, frame):
+#def child_reaper(sig, frame):
+#	os.waitpid(-1, os.WNOHANG)
+
+def quit_handler(sig, frame):
 	global g_shutdown
 	g_shutdown = True
 
@@ -56,17 +59,22 @@ def fork_child(s):
 		bailmsg(f'fork failed: {e.errno} ({e.strerror})')
 
 	child_activity_system(s)
+#	child_activity_popen(s)
 	sys.exit(0)
 
 def fork_children(n, s):
 	for i in range(0, n):
-		print('fork')
 		fork_child(s)
 
 if __name__ == "__main__":
-	signal.signal(signal.SIGINT,  signal_handler)
-	signal.signal(signal.SIGTERM, signal_handler)
-	signal.signal(signal.SIGQUIT, signal_handler)
+	signal.signal(signal.SIGINT,  quit_handler)
+	signal.signal(signal.SIGTERM, quit_handler)
+	signal.signal(signal.SIGQUIT, quit_handler)
+
+#	https://stackoverflow.com/questions/38775178/how-to-avoid-defunct-processes-with-python-fork
+#	https://mail.python.org/pipermail/tutor/2003-December/026748.html
+#	signal.signal(signal.SIGCHLD, child_reaper)
+	signal.signal(signal.SIGCHLD, signal.SIG_IGN)
 
 	while not g_shutdown:
 		fork_children(30, 4)
